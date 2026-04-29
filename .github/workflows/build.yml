@@ -11,6 +11,32 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Download official Configuration files
+        run: |
+          curl -L "https://raw.githubusercontent.com/MarlinFirmware/Marlin/2.1.2.7/Marlin/Configuration.h" -o Marlin/Configuration.h
+          curl -L "https://raw.githubusercontent.com/MarlinFirmware/Marlin/2.1.2.7/Marlin/Configuration_adv.h" -o Marlin/Configuration_adv.h
+
+      - name: Apply Sapphire Pro customizations
+        run: |
+          sed -i 's/#define MOTHERBOARD BOARD_RAMPS_14_EFB/#define MOTHERBOARD BOARD_MKS_ROBIN_NANO_V2/' Marlin/Configuration.h
+          sed -i 's/#define SERIAL_PORT 0/#define SERIAL_PORT 1/' Marlin/Configuration.h
+          sed -i 's/\/\/#define SERIAL_PORT_2 -1/#define SERIAL_PORT_2 3/' Marlin/Configuration.h
+          sed -i 's/#define CUSTOM_MACHINE_NAME "3D Printer"/#define CUSTOM_MACHINE_NAME "Sapphire Pro"/' Marlin/Configuration.h
+          sed -i 's\/\/\/#define COREXY/#define COREXY/' Marlin/Configuration.h
+          sed -i 's/#define TEMP_SENSOR_0 1/#define TEMP_SENSOR_0 5/' Marlin/Configuration.h
+          sed -i 's/#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 500 }/#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 1600, 415 }/' Marlin/Configuration.h
+          sed -i 's/#define X_BED_SIZE 200/#define X_BED_SIZE 220/' Marlin/Configuration.h
+          sed -i 's/#define Y_BED_SIZE 200/#define Y_BED_SIZE 220/' Marlin/Configuration.h
+          sed -i 's/#define X_MAX_POS X_BED_SIZE/#define X_MAX_POS 220/' Marlin/Configuration.h
+          sed -i 's/#define Y_MAX_POS Y_BED_SIZE/#define Y_MAX_POS 220/' Marlin/Configuration.h
+          sed -i 's/#define Z_MAX_POS 200/#define Z_MAX_POS 220/' Marlin/Configuration.h
+          sed -i 's/#define Y_HOME_DIR -1/#define Y_HOME_DIR 1/' Marlin/Configuration.h
+          sed -i 's\/\/\/#define BLTOUCH/#define BLTOUCH/' Marlin/Configuration.h
+          sed -i 's\/\/\/#define AUTO_BED_LEVELING_BILINEAR/#define AUTO_BED_LEVELING_BILINEAR/' Marlin/Configuration.h
+          sed -i 's\/\/\/#define Z_SAFE_HOMING/#define Z_SAFE_HOMING/' Marlin/Configuration.h
+          sed -i 's/#define X_DRIVER_TYPE  A4988/#define X_DRIVER_TYPE  TMC2208_STANDALONE/' Marlin/Configuration.h
+          sed -i 's/#define Y_DRIVER_TYPE  A4988/#define Y_DRIVER_TYPE  TMC2208_STANDALONE/' Marlin/Configuration.h
+
       - name: Cache pip
         uses: actions/cache@v4
         with:
@@ -32,13 +58,10 @@ jobs:
         run: pip install platformio
 
       - name: Build firmware
-        run: |
-          cd $GITHUB_WORKSPACE
-          pio run -e mks_robin_nano_v1v2
+        run: pio run -e mks_robin_nano_v1v2
 
       - name: Rename binary
-        run: |
-          mv .pio/build/mks_robin_nano_v1v2/Robin_nano35.bin Robin_nano35.bin
+        run: mv .pio/build/mks_robin_nano_v1v2/Robin_nano35.bin Robin_nano35.bin
 
       - name: Upload firmware artifact
         uses: actions/upload-artifact@v4
