@@ -34,6 +34,7 @@ jobs:
           sed -i 's|//#define Z_SAFE_HOMING|#define Z_SAFE_HOMING|' Marlin/Configuration.h
           sed -i 's|#define X_DRIVER_TYPE  A4988|#define X_DRIVER_TYPE  TMC2208_STANDALONE|' Marlin/Configuration.h
           sed -i 's|#define Y_DRIVER_TYPE  A4988|#define Y_DRIVER_TYPE  TMC2208_STANDALONE|' Marlin/Configuration.h
+          sed -i 's|//#define USE_YMAX_PLUG|#define USE_YMAX_PLUG|' Marlin/Configuration.h
 
       - name: Cache pip
         uses: actions/cache@v4
