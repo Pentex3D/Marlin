@@ -34,11 +34,11 @@ jobs:
       - name: Build firmware
         run: |
           cd $GITHUB_WORKSPACE
-          pio run -e mks_robin_nano_v2
+          pio run -e mks_robin_nano_v1v2
 
       - name: Rename binary
         run: |
-          mv .pio/build/mks_robin_nano_v2/Robin_nano35.bin Robin_nano35.bin
+          mv .pio/build/mks_robin_nano_v1v2/Robin_nano35.bin Robin_nano35.bin
 
       - name: Upload firmware artifact
         uses: actions/upload-artifact@v4
