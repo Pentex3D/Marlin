@@ -1,0 +1,47 @@
+name: Build Marlin Firmware
+
+on:
+  push:
+    branches: [ sapphire-pro ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip
+
+      - name: Cache PlatformIO
+        uses: actions/cache@v4
+        with:
+          path: ~/.platformio
+          key: ${{ runner.os }}-pio
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install PlatformIO
+        run: pip install platformio
+
+      - name: Build firmware
+        run: |
+          cd $GITHUB_WORKSPACE
+          pio run -e mks_robin_nano_v2
+
+      - name: Rename binary
+        run: |
+          mv .pio/build/mks_robin_nano_v2/Robin_nano35.bin Robin_nano35.bin
+
+      - name: Upload firmware artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Robin_nano35
+          path: Robin_nano35.bin
