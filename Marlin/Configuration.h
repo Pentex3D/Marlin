@@ -236,8 +236,10 @@
 //===========================================================================
 
 // Display TFT touch originale della Sapphire Pro (MKS TFT35)
-#define TFT_LVGL_UI
-#define MKS_ROBIN_TFT35
+#define TFT_COLOR_UI
+#define TFT_FONT NOTOSANS
+#define TFT_THEME BLACK_MARLIN
+#define MKS_TS35_V2_0
 
 //===========================================================================
 //============================== Fan ========================================
